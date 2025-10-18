@@ -1,37 +1,11 @@
 import type { APIContext } from "astro";
-import { App } from "octokit";
-import dotenv from "dotenv";
-import { readFileSync } from "node:fs";
 import { verify } from "@octokit/webhooks-methods";
-import { onInstallationCreated } from "../../../handlers/installation-created";
-import { onInstallationDeleted } from "../../../handlers/installation-deleted";
-import { onWorkflowJob } from "../../../handlers/workflow-job";
+import { onInstallationCreated } from "../../../webhook/handlers/installation-created";
+import { onInstallationDeleted } from "../../../webhook/handlers/installation-deleted";
+import { onWorkflowJob } from "../../../webhook/handlers/workflow-job";
+import { webhookApp, webhookSecret } from "../../../webhook/webhook";
 
-function getEnvVar(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Environment variable ${name} is not set`);
-  }
-  return value;
-}
-
-dotenv.config({ quiet: true });
-
-const appId = getEnvVar("GITHUB_APP_ID");
-const privateKeyPath = getEnvVar("GITHUB_PRIVATE_KEY_PATH");
-const secret = getEnvVar("GITHUB_WEBHOOK_SECRET");
-
-const privateKey = readFileSync(privateKeyPath, "utf8");
-
-const app = new App({
-  appId,
-  privateKey,
-  webhooks: { secret },
-  oauth: {
-    clientId: appId,
-    clientSecret: getEnvVar("GITHUB_CLIENT_SECRET"),
-  },
-});
+const app = webhookApp;
 
 onInstallationCreated(app);
 onInstallationDeleted(app);
@@ -44,7 +18,7 @@ app.webhooks.on("ping", async ({ octokit, payload }) => {
 export async function POST({ request }: APIContext) {
   const signature = request.headers.get("x-hub-signature-256") || "";
   const payload = await request.text();
-  const isValid = await verify(secret, payload, signature);
+  const isValid = await verify(webhookSecret, payload, signature);
   if (!isValid) {
     return new Response("Invalid signature", { status: 401 });
   }

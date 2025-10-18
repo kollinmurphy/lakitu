@@ -4,16 +4,27 @@ import { column, defineDb, defineTable } from "astro:db";
 
 const Installation = defineTable({
   columns: {
-    installationId: column.number(),
+    installationId: column.number({
+      primaryKey: true,
+    }),
   },
 });
 
 const Runner = defineTable({
   columns: {
-    runnerId: column.number(),
+    runnerId: column.number({
+      primaryKey: true,
+    }),
+    installationId: column.number(),
     name: column.text(),
     labels: column.json(),
   },
+  foreignKeys: [
+    {
+      columns: ["installationId"],
+      references: () => [Installation.columns.installationId],
+    },
+  ],
 });
 
 const WorkflowJob = defineTable({
@@ -37,6 +48,12 @@ const WorkflowJob = defineTable({
     createdAt: column.date(),
     completedAt: column.date({ optional: true }),
   },
+  foreignKeys: [
+    {
+      columns: ["runnerId"],
+      references: () => [Runner.columns.runnerId],
+    },
+  ],
 });
 
 export default defineDb({

@@ -1,30 +1,10 @@
 ---
-import { Runner } from "astro:db";
-import { db } from "astro:db";
-
-const runners = await db.select().from(Runner);
-
-export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+import { HistoryTable } from "../components/history-table";
+import { RunnerDisplay } from "../components/runner-display";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-  </head>
-  <body>
-    <h1>Astro</h1>
-    <ul>
-      {
-        runners.map((runner) => (
-          <li>
-            <strong>{runner.name}</strong>: {JSON.stringify(runner.labels)}
-          </li>
-        ))
-      }
-    </ul>
-  </body>
-</html>
+<Layout>
+  <HistoryTable client:only />
+  <RunnerDisplay client:only />
+</Layout>
