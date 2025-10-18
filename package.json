@@ -12,6 +12,7 @@
     "@astrojs/db": "^0.18.0",
     "@astrojs/node": "^9.5.0",
     "@astrojs/react": "^4.4.0",
+    "@octokit/plugin-enterprise-server": "^20.0.0",
     "@tailwindcss/vite": "^4.1.14",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
@@ -22,6 +23,7 @@
     "morgan": "^1.10.1",
     "octokit": "^5.0.4",
     "react": "^19.2.0",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.2.0",
     "tailwindcss": "^4.1.14"
   },

@@ -1,7 +1,7 @@
 import { App, Octokit } from "octokit";
 import { readFileSync } from "node:fs";
 import { db, Installation } from "astro:db";
-import { getEnvVar } from "./get-env-var";
+import { getEnvVar } from "../utils/get-env-var";
 
 const appId = getEnvVar("GITHUB_APP_ID");
 const privateKeyPath = getEnvVar("GITHUB_PRIVATE_KEY_PATH");

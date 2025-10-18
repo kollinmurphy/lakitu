@@ -1,10 +1,26 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { HistoryTable } from "../components/history-table";
 import { RunnerDisplay } from "../components/runner-display";
+import { RunnerTable } from "../components/runner-table";
+import { getEnterpriseOctokit } from "../utils/octokit";
+import type { GetRunnersResponse } from "../types/runners";
+import { getGithubEnterprise, getGithubDomain } from "../utils/get-env-var";
+
+const octokit = getEnterpriseOctokit();
+const githubDomain = getGithubDomain();
+const githubEnterprise = getGithubEnterprise();
+const runners: GetRunnersResponse = await octokit.paginate(
+  "GET /enterprises/{enterprise}/actions/runners",
+  { enterprise: githubEnterprise }
+);
 ---
 
 <Layout>
-  <HistoryTable client:only />
-  <RunnerDisplay client:only />
+  <RunnerDisplay client:only runners={runners} />
+  <RunnerTable
+    client:only
+    runners={runners}
+    githubDomain={githubDomain}
+    githubEnterprise={githubEnterprise}
+  />
 </Layout>
