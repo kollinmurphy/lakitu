@@ -23,6 +23,8 @@ export default defineConfig({
   },
 
   adapter: node({
-    mode: 'middleware'
-  })
+    mode: 'middleware',
+  }),
+
+  output: "server",
 });

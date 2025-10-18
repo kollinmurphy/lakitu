@@ -2,14 +2,7 @@
 import { Runner } from "astro:db";
 import { db } from "astro:db";
 
-let runners = await db.select().from(Runner);
-if (runners.length !== 0) {
-  await db.insert(Runner).values({
-    labels: ["example", "first-run"],
-    name: `${Date.now().toLocaleString()}`,
-  });
-  runners = await db.select().from(Runner);
-}
+const runners = await db.select().from(Runner);
 
 export const prerender = false;
 ---

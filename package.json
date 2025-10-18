@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --allowed-hosts overexuberant-perceivedly-madeleine.ngrok-free.dev",
     "build": "astro build --remote",
     "preview": "astro preview",
     "astro": "astro"
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
+    "nodemon": "^3.1.10",
     "tsx": "^4.20.6"
   }
 }

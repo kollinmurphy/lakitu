@@ -1,6 +1,7 @@
 import { App, createNodeMiddleware } from "octokit";
 import dotenv from "dotenv";
 import { readFileSync } from "node:fs";
+import { db, Installation } from "astro:db";
 
 function getEnvVar(name: string): string {
   const value = process.env[name];
@@ -34,6 +35,15 @@ app.webhooks.on("issues.opened", ({ octokit, payload }) => {
     repo: payload.repository.name,
     issue_number: payload.issue.number,
     body: "Hello, World!",
+  });
+});
+
+app.webhooks.on("installation.created", async ({ octokit, payload }) => {
+  const installationId = payload.installation.id;
+  console.log(`New installation created with ID: ${installationId}`);
+  await db.insert(Installation).values({
+    installationId: installationId,
+    repositories: payload.repositories?.map((repo) => repo.full_name) ?? [],
   });
 });
 
