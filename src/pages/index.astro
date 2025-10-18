@@ -1,16 +1,37 @@
 ---
+import { Runner } from "astro:db";
+import { db } from "astro:db";
 
+let runners = await db.select().from(Runner);
+if (runners.length !== 0) {
+  await db.insert(Runner).values({
+    labels: ["example", "first-run"],
+    name: `${Date.now().toLocaleString()}`,
+  });
+  runners = await db.select().from(Runner);
+}
+
+export const prerender = false;
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <h1>Astro</h1>
+    <ul>
+      {
+        runners.map((runner) => (
+          <li>
+            <strong>{runner.name}</strong>: {JSON.stringify(runner.labels)}
+          </li>
+        ))
+      }
+    </ul>
+  </body>
 </html>
